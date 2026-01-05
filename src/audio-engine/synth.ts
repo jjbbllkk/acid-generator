@@ -2,7 +2,7 @@ import { MonoSynth, PingPongDelay, Split, Volume } from 'tone';
 import { store } from '../store';
 
 const {
-  synth: { cutoff, resonance, delaySend },
+  synth: { cutoff, resonance, delaySend, envelope, decay },
 } = store.getState();
 
 const split = new Split(2);
@@ -19,18 +19,19 @@ const tb303 = new MonoSynth({
     attackCurve: 'exponential',
     releaseCurve: 'exponential',
     attack: 0.01,
-    decay: 0.3,
-    sustain: 0.5,
+    decay: decay, // Use decay from store
+    sustain: 0.1,
     release: 0.2,
   },
   filterEnvelope: {
     attackCurve: 'exponential',
     releaseCurve: 'exponential',
     attack: 0.01,
-    decay: 0.3,
-    sustain: 0.5,
+    decay: decay, // Use decay from store
+    sustain: 0.1,
     release: 1,
     baseFrequency: cutoff,
+    octaves: envelope, // Use envelope (mod) from store
     exponent: 5,
   },
   filter: {

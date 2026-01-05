@@ -1,6 +1,4 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-import eslint from 'vite-plugin-eslint';
+// ... imports
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -9,5 +7,5 @@ export default defineConfig({
   },
   assetsInclude: ['**/*.md'],
   plugins: [react(), eslint({ fix: true })],
-  base: '',
+  base: '/acid-generator/', // <--- CHANGE THIS LINE
 });

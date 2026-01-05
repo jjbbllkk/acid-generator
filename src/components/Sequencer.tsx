@@ -16,7 +16,7 @@ const Sequencer: FC<Props> = ({
   onDownloadClick,
   pattern,
   currentStep,
-  patternLength,
+  patternLength, // New: Destructure patternLength
   resonance,
   cutoff,
   envelope,
@@ -56,7 +56,7 @@ const Sequencer: FC<Props> = ({
             pattern={pattern}
             currentStep={currentStep}
             scaleName={scaleName}
-            patternLength={patternLength}
+            patternLength={patternLength} // New: Pass it to PianoRoll
           />
         </div>
       </main>

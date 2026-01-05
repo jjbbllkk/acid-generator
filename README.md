@@ -1,33 +1,41 @@
 # ACID PATTERN GENERATOR
 
-Hi! This is a fork of the code listed below. I am working on implimenting some new features to it
+**A deterministic, musically-aware acid bassline generator.**
 
-Web implementation of acid pattern generator heavily inspired
-by [**STING by SKINNERBOX**](https://maxforlive.com/library/device/4260/sting-by-skinnerbox) M4L device.
+This is a fork of [drakh/acid-generator](https://github.com/drakh/acid-generator), heavily inspired by the [**STING by SKINNERBOX**](https://maxforlive.com/library/device/4260/sting-by-skinnerbox) Max for Live device.
+
+Unlike standard random generators, this version focuses on **musical stability and reproducibility**. It uses seeded random number generation and weighted probability to ensure that "random" patterns feel like cohesive musical phrases rather than chaotic noise.
 
 [![IMAGE](https://maxforlive.com/images/screenshots/?ss=sting.jpg&id=4260)](https://maxforlive.com/library/device/4260/sting-by-skinnerbox)
 
-Created with help of [Tone.js](https://tonejs.github.io/).
+## 🚀 New Features & Changes
 
-[![IMAGE](https://avatars.githubusercontent.com/u/11019186?s=200&v=4)](https://tonejs.github.io/)
+### 🧠 Deterministic & Musical Generation
+* **Seed-Based Logic:** The generator is now fully deterministic. Every pattern is generated from a unique seed. If you find a pattern you like, it will sound exactly the same every time you load it.
+* **Weighted "Musical" Probability:** The generator no longer picks notes purely at random. It uses a tonal hierarchy:
+    * **Root & Fifth Priority:** The generator favors the root and fifth notes of the scale, especially on downbeats, to "anchor" the bassline.
+    * **Rhythmic Stability:** Downbeats (steps 1, 5, 9, 13) are prioritized when generating rhythms to establish a strong groove.
+    * **Intelligent Resolution:** "Wonky" intervals are mathematically forced to resolve to stable tones on the "One" (the first beat of the bar).
 
+### 🎛️ Smarter Knobs
+* **Density as a Mask:** Changing `Density` no longer regenerates a new random pattern. Instead, it acts as a "Rhythmic Gate," revealing or hiding notes from a fixed "Master Sequence." Turning it down removes the funkier off-beats first; turning it up reveals them.
+* **Spread as a Pool:** Changing `Spread` controls the *pool* of allowed notes. Lower settings restrict the melody to just the Root and Fifth. Higher settings unlock the full scale. This allows you to simplify a melody without changing its fundamental rhythm.
+* **Loop Length Independence:** Changing the `Pattern Length` (e.g., from 16 to 7) does not regenerate the notes. It simply loops a smaller section of the 64-step master sequence.
 
-Rationale behind is that as i am mainly web developer i wanted to create prototype, which i want to rewrite later
-as plugin for [**Mod Dwarf**](https://mod.audio/dwarf/)
-Main focus is on generating the sequence not the 303 sound.
-
-[Live demo](https://drakh.github.io/acid-generator/)
-
-[Repository](https://github.com/drakh/acid-generator)
+### 🎹 Extended Audio Engine
+* **New Synth Controls:** Added **Envelope Mod** (Env) and **Decay** controls to the interface, allowing for deeper, squelchier TB-303 style sound design.
+* **Visual Feedback:** The piano roll now visually dims steps that are outside the active loop length.
+* **Expanded Scales:** Added Pentatonic Minor/Major, Blues Minor, Whole Tone, Chromatic, and Japanese In Sen scales.
 
 ## USAGE
 
-Hit **space** to start playing the sequence. 
+* **Space:** Start/Stop playback.
+* **G (or Click Smile):** Generate a completely new pattern (new Seed).
+* **Knobs:**
+    * **Density:** Add/remove rhythmic events.
+    * **Spread:** Add/remove melodic complexity.
+    * **Env / Decay / Cut / Res:** Shape the synth tone.
 
-Hit **G** on your keyboard, or click the **SMILE** to generate new sequence.
+## Tech Stack
 
-### TODO
-
-- euclidean mode
-- find out the format of Polyend Play fills to make exports for it possible. 
-- ?
+Created with help of [Tone.js](

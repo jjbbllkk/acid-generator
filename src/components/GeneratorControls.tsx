@@ -47,12 +47,12 @@ const GeneratorControls: FC<{
         <li>
           <Knob
             onChange={onPatternLengthChange}
-            min={16}
+            min={1} // Changed from 16 to 1
             max={64}
             defaultValue={DEFAULTS.SEQ_LENGTH}
             value={patternLength}
             direction={'vertical'}
-            step={16}
+            step={1} // Changed from 16 to 1
             label={'PATTERN LENGTH'}
           />
         </li>
@@ -106,14 +106,14 @@ const GeneratorControls: FC<{
         </li>
       </ul>
       {/*<aside>*/}
-      {/*  <label>*/}
-      {/*    <input type="checkbox" />*/}
-      {/*    START WITH NOTE*/}
-      {/*  </label>*/}
-      {/*  <label>*/}
-      {/*    <input type="checkbox" />*/}
-      {/*    START WITH ACCENT*/}
-      {/*  </label>*/}
+      {/* <label>*/}
+      {/* <input type="checkbox" />*/}
+      {/* START WITH NOTE*/}
+      {/* </label>*/}
+      {/* <label>*/}
+      {/* <input type="checkbox" />*/}
+      {/* START WITH ACCENT*/}
+      {/* </label>*/}
       {/*</aside>*/}
     </nav>
   );

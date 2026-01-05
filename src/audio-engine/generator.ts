@@ -1,17 +1,5 @@
 import { type Unit } from 'tone';
-import { arrayRand, sfc32 } from '../utils';
-
-// We define "Importance" for notes.
-// 0 (Root) is king. 7 (Fifth) is queen. 
-// These values allow us to sort the scale musically.
-const getNoteImportance = (note: number): number => {
-  const n = note % 12; // Normalize to one octave
-  if (n === 0) return 100; // Root
-  if (n === 7) return 80;  // Fifth
-  if (n === 5) return 60;  // Fourth
-  if (n === 4 || n === 3) return 50; // Thirds (Major/Minor)
-  return 10; // Color tones (2nd, 6th, 7th, etc)
-};
+import { sfc32 } from '../utils';
 
 const scale = Array(7)
   .fill(0)
@@ -52,40 +40,22 @@ const generate = ({
   const rng = sfc32(seed, seed, seed, seed);
 
   // --- 1. MUSICAL SPREAD LOGIC ---
-  // Instead of a pure random shuffle, we create a "Weighted Shuffle".
-  // We want high-importance notes (Root, 5th) to be likely to survive
-  // even when Spread is low.
-  
-  // First, we attach a random value to each note, but we boost it by importance.
-  // This means Root/5th are *more likely* to end up at the start of the array,
-  // but it's still slightly random.
   const weightedScale = scale.map((noteIndex) => {
-     // We need to know what the actual note interval is to weight it.
-     // Since 'scale' here is just indices [0,1,2...], we assume a standard mapping logic 
-     // or simply treat index 0 as Root for generic scales.
-     // Ideally, we'd look up the real semitone value from the SCALES definition, 
-     // but since we only have indices here, we prioritize index 0 (Root) and 4 (Fifth-ish in 7-note scales).
-     
-     // Simple Heuristic for indices: 0 is usually Root.
      let weight = Math.random(); 
      if (noteIndex === 0) weight += 999; // Always keep Root first
-     if (noteIndex === 4) weight += 0.5; // Often the 5th in a 7-note scale
+     if (noteIndex === 4) weight += 0.5; // Often the 5th
      
      return { index: noteIndex, weight };
   });
 
-  // Sort by our weighted random value
   weightedScale.sort((a, b) => b.weight - a.weight);
-  
   const sortedScale = weightedScale.map(i => i.index);
 
-  // Apply Spread "Gate"
   const spreadCount = Math.max(1, Math.round(scale.length * (spread / 100)));
   const selectedNotes = sortedScale.slice(0, spreadCount);
 
   // --- 2. DENSITY MASK (RHYTHM) ---
   const barSteps = Array(BAR_LEN).fill(0).map((_, i) => i);
-  // We weight the rhythm too! Downbeats (0, 4, 8, 12) get higher priority
   const weightedBarSteps = barSteps.map(step => {
       let weight = rng();
       if (step % 4 === 0) weight += 0.5; // Boost downbeats
@@ -100,18 +70,12 @@ const generate = ({
   const allSteps = Array(MAX_LEN).fill(0).map((_, i) => i);
 
   const stepData = allSteps.map((i) => {
-    // Determine if this is a "strong" rhythmic step (Downbeat)
     const isDownbeat = i % 4 === 0;
-    
-    // Select a note from our pool
     let noteIndex = 0;
     
     if (isDownbeat && rng() > 0.3) {
-       // 70% chance on downbeats to pick the most stable note available (index 0 of our sorted list)
-       // Because we sorted `selectedNotes` by importance, selectedNotes[0] is likely the Root.
        noteIndex = 0; 
     } else {
-       // Otherwise pick randomly from the available pool
        noteIndex = randomInt(0, selectedNotes.length - 1, rng);
     }
 

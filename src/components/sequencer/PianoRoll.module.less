@@ -1,12 +1,11 @@
 @import "../../colors";
 
-&.pattern {
+.pattern {
   padding: 0;
   margin: 0;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-
   li {
     list-style: none;
     padding: 0;
@@ -18,11 +17,17 @@
     flex: 2;
     border: 1px solid @gray--30;
     background-color: @gray--100;
-
     &.active {
       border: 1px solid @blue--60;
       box-shadow: inset 0 0 5px 0 @blue--60;
     }
+
+    /* --- NEW CODE --- */
+    &.inactive {
+      opacity: 0.25;
+      pointer-events: none; /* Optional: disables clicking on inactive steps */
+    }
+    /* ---------------- */
 
     &:first-of-type {
       flex: 1;

@@ -7,13 +7,13 @@ import styles from './SynthControls.module.less';
 interface Props {
   resonance: number;
   cutoff: number;
-  envelope: number;
-  decay: number;
+  envelope: number; // New prop
+  decay: number;    // New prop
   delay: number;
   onCutoffChange: (v: number) => void;
   onResonanceChange: (v: number) => void;
-  onEnvelopeChange: (v: number) => void;
-  onDecayChange: (v: number) => void;
+  onEnvelopeChange: (v: number) => void; // New handler
+  onDecayChange: (v: number) => void;    // New handler
   onDelaySendChange: (v: number) => void;
 }
 

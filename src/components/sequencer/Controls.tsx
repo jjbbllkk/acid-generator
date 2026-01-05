@@ -11,6 +11,8 @@ type Props = SynthControlProps & PlayControlProps & ChannelSelectProps;
 const Controls: FC<Props & { output: SequencerOutput | undefined }> = ({
   resonance,
   cutoff,
+  envelope, // New
+  decay,    // New
   delay,
   tempo,
   onPlayClick,
@@ -18,6 +20,8 @@ const Controls: FC<Props & { output: SequencerOutput | undefined }> = ({
   playing,
   onCutoffChange,
   onResonanceChange,
+  onEnvelopeChange, // New
+  onDecayChange,    // New
   onDelaySendChange,
   output,
   onChannelChange,
@@ -35,9 +39,13 @@ const Controls: FC<Props & { output: SequencerOutput | undefined }> = ({
           <SynthControls
             resonance={resonance}
             cutoff={cutoff}
+            envelope={envelope} // Pass to SynthControls
+            decay={decay}       // Pass to SynthControls
             delay={delay}
             onCutoffChange={onCutoffChange}
             onResonanceChange={onResonanceChange}
+            onEnvelopeChange={onEnvelopeChange} // Pass to SynthControls
+            onDecayChange={onDecayChange}       // Pass to SynthControls
             onDelaySendChange={onDelaySendChange}
           />
         ) : (

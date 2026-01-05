@@ -82,7 +82,6 @@ const App: FC = () => {
     };
   }, [midi]);
 
-  // Handler for the Generate Button (New Seed = New Melody)
   const handleGenerateClick = useCallback(() => {
     generatePattern();
   }, []);
@@ -94,18 +93,12 @@ const App: FC = () => {
     [dispatch],
   );
 
-  // --- CHANGED SECTION START: Handlers now trigger generatePattern(true, true) ---
-  // The first 'true' forces generation even if playing.
-  // The second 'true' tells it to KEEP the current seed (reshape current melody).
-
   const handlePatternLengthChange = useCallback(
     (v: number) => {
       dispatch(setPatternLength(v));
-      generatePattern(true, true);
     },
     [dispatch],
   );
-
   const handleSpreadChange = useCallback(
     (v: number) => {
       dispatch(setSpread(v));
@@ -113,7 +106,6 @@ const App: FC = () => {
     },
     [dispatch],
   );
-
   const handleDensityChange = useCallback(
     (v: number) => {
       dispatch(setDensity(v));
@@ -121,7 +113,6 @@ const App: FC = () => {
     },
     [dispatch],
   );
-
   const handleAccentsDensityChange = useCallback(
     (v: number) => {
       dispatch(setAccentDensity(v));
@@ -129,7 +120,6 @@ const App: FC = () => {
     },
     [dispatch],
   );
-
   const handleSlidesDensityChange = useCallback(
     (v: number) => {
       dispatch(setSlidesDensity(v));
@@ -137,7 +127,6 @@ const App: FC = () => {
     },
     [dispatch],
   );
-  // --- CHANGED SECTION END ---
 
   const togglePlay = useCallback(() => {
     void toggleTransport();

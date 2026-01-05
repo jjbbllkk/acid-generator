@@ -5,7 +5,13 @@ import { store } from '../store';
 import { setGenerate, setSeed } from '../store/generator';
 import { setName, setPattern } from '../store/sequencer';
 import { setPlaying, setStep, setTempo } from '../store/transport';
-import { setCutoff, setDelaySend, setResonance } from '../store/synth';
+import {
+  setCutoff,
+  setDelaySend,
+  setResonance,
+  setEnvelope,
+  setDecay,
+} from '../store/synth';
 import { generate } from './generator';
 import { delaySend, tb303 } from './synth';
 import { getNoteInScale, getOutput } from '../utils';
@@ -66,26 +72,26 @@ const generatePattern = (force = false, keepSeed = false) => {
     dispatch(setGenerate(true));
     return;
   }
-  
+
   dispatch(setGenerate(false));
-  
+
   let currentSeed = seed;
 
   if (!keepSeed) {
-     currentSeed = Date.now();
-     dispatch(setSeed(currentSeed));
-     dispatch(setName(dockerNames.getRandomName()));
+    currentSeed = Date.now();
+    dispatch(setSeed(currentSeed));
+    dispatch(setName(dockerNames.getRandomName()));
   }
 
   dispatch(
     setPattern(
-      generate({ 
-          patternLength, 
-          density, 
-          spread, 
-          accentsDensity, 
-          slidesDensity,
-          seed: currentSeed
+      generate({
+        patternLength,
+        density,
+        spread,
+        accentsDensity,
+        slidesDensity,
+        seed: currentSeed,
       }),
     ),
   );
@@ -139,14 +145,13 @@ const playSequenceStep = (time: number) => {
         output: { outputs },
       },
     },
-    generator: { dispatchGenerate, patternLength }, // We now get patternLength from generator state
+    generator: { dispatchGenerate, patternLength },
     synth: { resonance },
   } = store.getState();
 
   const output = getOutput(outputs);
 
-  // The loop length is now determined by the knob, not the array length
-  const seqLength = patternLength; 
+  const seqLength = patternLength;
 
   const currentStep = getNextStep(oldStep, seqLength);
 
@@ -154,7 +159,6 @@ const playSequenceStep = (time: number) => {
     generatePattern(true);
   }
 
-  // We play the note if the current step exists in our (likely 64-step) pattern
   if (currentStep < pattern.length) {
     const { note, accent, slide, octave } = pattern[currentStep];
 
@@ -172,7 +176,7 @@ const playSequenceStep = (time: number) => {
 };
 
 const changeCutoff = (v: number) => {
-  // @ts-ignore: FrequencyEnvelope vs EnvelopeOptions which is missing baseFrequency
+  // @ts-ignore: FrequencyEnvelope vs EnvelopeOptions
   tb303.filterEnvelope.set({ baseFrequency: v });
   tb303.filter.set({ frequency: v });
   dispatch(setCutoff(v));
@@ -186,6 +190,19 @@ const changeResonance = (v: number) => {
 const changeDelaySend = (v: number) => {
   delaySend.set({ volume: v });
   dispatch(setDelaySend(v));
+};
+
+// NEW: Control handlers
+const changeEnvelope = (v: number) => {
+  // @ts-ignore: Tone.js types are sometimes loose
+  tb303.filterEnvelope.set({ octaves: v });
+  dispatch(setEnvelope(v));
+};
+
+const changeDecay = (v: number) => {
+  tb303.envelope.set({ decay: v });
+  tb303.filterEnvelope.set({ decay: v });
+  dispatch(setDecay(v));
 };
 
 Transport.scheduleRepeat(playSequenceStep, '16n');
@@ -244,6 +261,8 @@ export {
   changeCutoff,
   changeResonance,
   changeDelaySend,
+  changeEnvelope, // Exported
+  changeDecay,    // Exported
   downloadPattern,
   generatePattern,
   stopInternalSynth,

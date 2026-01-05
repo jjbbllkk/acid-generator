@@ -19,13 +19,13 @@ const Sequencer: FC<Props> = ({
   patternLength,
   resonance,
   cutoff,
-  envelope, // New
-  decay,    // New
+  envelope,
+  decay,
   delay,
   onCutoffChange,
   onResonanceChange,
-  onEnvelopeChange, // New
-  onDecayChange,    // New
+  onEnvelopeChange,
+  onDecayChange,
   onDelaySendChange,
   onPlayClick,
   onTempoChange,

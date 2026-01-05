@@ -7,13 +7,13 @@ import styles from './SynthControls.module.less';
 interface Props {
   resonance: number;
   cutoff: number;
-  envelope: number; // New
-  decay: number;    // New
+  envelope: number;
+  decay: number;
   delay: number;
   onCutoffChange: (v: number) => void;
   onResonanceChange: (v: number) => void;
-  onEnvelopeChange: (v: number) => void; // New
-  onDecayChange: (v: number) => void;    // New
+  onEnvelopeChange: (v: number) => void;
+  onDecayChange: (v: number) => void;
   onDelaySendChange: (v: number) => void;
 }
 
@@ -55,7 +55,6 @@ const SynthControls: FC<Props> = ({
           label={'RES'}
         />
       </li>
-      {/* New Envelope Mod Knob */}
       <li>
         <Knob
           onChange={onEnvelopeChange}
@@ -68,7 +67,6 @@ const SynthControls: FC<Props> = ({
           label={'ENV'}
         />
       </li>
-      {/* New Decay Knob */}
       <li>
         <Knob
           onChange={onDecayChange}

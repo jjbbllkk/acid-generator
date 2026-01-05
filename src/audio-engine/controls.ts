@@ -71,7 +71,6 @@ const generatePattern = (force = false, keepSeed = false) => {
   
   let currentSeed = seed;
 
-  // If we are NOT keeping the seed, generate a new one and a new name
   if (!keepSeed) {
      currentSeed = Date.now();
      dispatch(setSeed(currentSeed));
@@ -140,13 +139,14 @@ const playSequenceStep = (time: number) => {
         output: { outputs },
       },
     },
-    generator: { dispatchGenerate },
+    generator: { dispatchGenerate, patternLength }, // We now get patternLength from generator state
     synth: { resonance },
   } = store.getState();
 
   const output = getOutput(outputs);
 
-  const seqLength = pattern.length;
+  // The loop length is now determined by the knob, not the array length
+  const seqLength = patternLength; 
 
   const currentStep = getNextStep(oldStep, seqLength);
 
@@ -154,6 +154,7 @@ const playSequenceStep = (time: number) => {
     generatePattern(true);
   }
 
+  // We play the note if the current step exists in our (likely 64-step) pattern
   if (currentStep < pattern.length) {
     const { note, accent, slide, octave } = pattern[currentStep];
 

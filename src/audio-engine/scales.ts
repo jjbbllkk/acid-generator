@@ -17,9 +17,17 @@ export enum SCALE {
   SUPER_LOCRIAN = 'SUPER_LOCRIAN',
   SPANISH = 'SPANISH',
   BHAIRAV = 'BHAIRAV',
+  // --- NEW SCALES ---
+  PENTATONIC_MINOR = 'PENTATONIC_MINOR',
+  PENTATONIC_MAJOR = 'PENTATONIC_MAJOR',
+  BLUES_MINOR = 'BLUES_MINOR',
+  WHOLE_TONE = 'WHOLE_TONE',
+  CHROMATIC = 'CHROMATIC',
+  JAPANESE_IN_SEN = 'JAPANESE_IN_SEN'
 }
 
-export type Scale = [number, number, number, number, number, number, number];
+// Changed from fixed tuple to dynamic array number[]
+export type Scale = number[]; 
 
 export type ScaleDef = {
   [k in SCALE]: Scale;
@@ -44,4 +52,11 @@ export const SCALES: ScaleDef = {
   [SCALE.SUPER_LOCRIAN]: [0, 1, 3, 4, 6, 8, 10],
   [SCALE.SPANISH]: [0, 1, 4, 5, 7, 9, 10],
   [SCALE.BHAIRAV]: [0, 1, 4, 5, 7, 8, 11],
+  // --- NEW DEFINITIONS ---
+  [SCALE.PENTATONIC_MINOR]: [0, 3, 5, 7, 10],
+  [SCALE.PENTATONIC_MAJOR]: [0, 2, 4, 7, 9],
+  [SCALE.BLUES_MINOR]: [0, 3, 5, 6, 7, 10],
+  [SCALE.WHOLE_TONE]: [0, 2, 4, 6, 8, 10],
+  [SCALE.CHROMATIC]: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+  [SCALE.JAPANESE_IN_SEN]: [0, 1, 5, 7, 10]
 };

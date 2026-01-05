@@ -4,8 +4,8 @@ import {
   changeCutoff,
   changeDelaySend,
   changeResonance,
-  changeEnvelope, // New
-  changeDecay,    // New
+  changeEnvelope,
+  changeDecay,
   changeTempo,
   downloadPattern,
   generatePattern,
@@ -67,7 +67,7 @@ const App: FC = () => {
       patternLength,
       slidesDensity,
     },
-    synth: { cutoff, resonance, envelope, decay, delaySend }, // Destructure new state
+    synth: { cutoff, resonance, envelope, decay, delaySend },
   } = useSelector((state: State) => {
     return state;
   });
@@ -215,13 +215,13 @@ const App: FC = () => {
           onScaleChange={handleScaleChange}
           resonance={resonance}
           cutoff={cutoff}
-          envelope={envelope} // Pass props
-          decay={decay}       // Pass props
+          envelope={envelope}
+          decay={decay}
           delay={delaySend}
           onCutoffChange={changeCutoff}
           onResonanceChange={changeResonance}
-          onEnvelopeChange={changeEnvelope} // Pass handler
-          onDecayChange={changeDecay}       // Pass handler
+          onEnvelopeChange={changeEnvelope}
+          onDecayChange={changeDecay}
           onDelaySendChange={changeDelaySend}
           onPlayClick={togglePlay}
           onTempoChange={handleTempoChange}

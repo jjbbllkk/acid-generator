@@ -20,35 +20,35 @@ interface GeneratorParams {
   spread: number;
   accentsDensity: number;
   slidesDensity: number;
-  seed?: number; // We added a seed here
+  seed?: number;
 }
 
-// A helper to get a random integer between min and max using our custom RNG
 const randomInt = (min: number, max: number, rng: () => number) => {
   return Math.floor(rng() * (max - min + 1)) + min;
 };
 
+// We always generate 64 steps so the pattern is stable regardless of loop length
+const MAX_LEN = 64;
+
 const generate = ({
-  patternLength,
   density,
   spread,
   accentsDensity,
   slidesDensity,
-  seed = Date.now(), // Default to current time if no seed is provided
+  seed = Date.now(),
 }: GeneratorParams): SequenceStep[] => {
-  // Create our predictable random number generator using the seed
   const rng = sfc32(seed, seed, seed, seed);
 
-  const elements = Array(patternLength)
+  // We generate elements for the full MAX_LEN (64)
+  const elements = Array(MAX_LEN)
     .fill(0)
     .map((_v, i) => i);
 
-  const seqDensity = Math.round(patternLength * (density / 100));
+  // Density is calculated against the full 64 steps
+  const seqDensity = Math.round(MAX_LEN * (density / 100));
   
-  // Use our 'rng' instead of generic random
   const notesToGenerate = randomInt(Math.round(seqDensity / 2), seqDensity, rng);
 
-  // Pass 'rng' to arrayRand so the shuffling is predictable
   const selectedSteps = arrayRand(elements, notesToGenerate, rng);
 
   const accents = arrayRand(

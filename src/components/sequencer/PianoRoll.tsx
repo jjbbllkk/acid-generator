@@ -10,7 +10,7 @@ interface Props {
   pattern: SequenceStep[];
   currentStep: number;
   scaleName: SCALE;
-  patternLength: number;
+  patternLength: number; // Added this definition
 }
 
 const PianoRoll: FC<Props> = ({ pattern, currentStep, scaleName, patternLength }) => {
@@ -34,6 +34,7 @@ const PianoRoll: FC<Props> = ({ pattern, currentStep, scaleName, patternLength }
         </ul>
       </li>
       {pattern.map(({ note, octave, accent, slide }, i) => {
+        // Use patternLength to dim inactive steps
         const isInactive = i >= patternLength;
         return (
           <li

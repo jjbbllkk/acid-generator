@@ -16,11 +16,16 @@ const Sequencer: FC<Props> = ({
   onDownloadClick,
   pattern,
   currentStep,
+  patternLength,
   resonance,
   cutoff,
+  envelope, // New
+  decay,    // New
   delay,
   onCutoffChange,
   onResonanceChange,
+  onEnvelopeChange, // New
+  onDecayChange,    // New
   onDelaySendChange,
   onPlayClick,
   onTempoChange,
@@ -47,7 +52,12 @@ const Sequencer: FC<Props> = ({
       </header>
       <main>
         <div>
-          <PianoRoll pattern={pattern} currentStep={currentStep} scaleName={scaleName} />
+          <PianoRoll
+            pattern={pattern}
+            currentStep={currentStep}
+            scaleName={scaleName}
+            patternLength={patternLength}
+          />
         </div>
       </main>
       <footer>
@@ -60,9 +70,13 @@ const Sequencer: FC<Props> = ({
         <Controls
           resonance={resonance}
           cutoff={cutoff}
+          envelope={envelope}
+          decay={decay}
           delay={delay}
           onCutoffChange={onCutoffChange}
           onResonanceChange={onResonanceChange}
+          onEnvelopeChange={onEnvelopeChange}
+          onDecayChange={onDecayChange}
           onDelaySendChange={onDelaySendChange}
           onPlayClick={onPlayClick}
           onTempoChange={onTempoChange}

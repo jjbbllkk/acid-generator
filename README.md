@@ -1,5 +1,7 @@
 # ACID PATTERN GENERATOR
 
+Hi! This is a fork of the code listed below. I am working on implimenting some new features to it
+
 Web implementation of acid pattern generator heavily inspired
 by [**STING by SKINNERBOX**](https://maxforlive.com/library/device/4260/sting-by-skinnerbox) M4L device.
 

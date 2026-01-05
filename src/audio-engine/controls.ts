@@ -2,7 +2,7 @@ import { Frequency, start, Time, Transport } from 'tone';
 import { Midi } from '@tonejs/midi';
 import dockerNames from 'docker-names-ts';
 import { store } from '../store';
-import { setGenerate } from '../store/generator';
+import { setGenerate, setSeed } from '../store/generator';
 import { setName, setPattern } from '../store/sequencer';
 import { setPlaying, setStep, setTempo } from '../store/transport';
 import { setCutoff, setDelaySend, setResonance } from '../store/synth';
@@ -56,20 +56,38 @@ const getNextStep = (step: number, maxSteps: number): number => {
   return step + 1 >= maxSteps ? 0 : step + 1;
 };
 
-const generatePattern = (force = false) => {
+const generatePattern = (force = false, keepSeed = false) => {
   const {
     transport: { playing },
-    generator: { patternLength, density, spread, accentsDensity, slidesDensity },
+    generator: { patternLength, density, spread, accentsDensity, slidesDensity, seed },
   } = store.getState();
+
   if (playing && !force) {
     dispatch(setGenerate(true));
     return;
   }
+  
   dispatch(setGenerate(false));
-  dispatch(setName(dockerNames.getRandomName()));
+  
+  let currentSeed = seed;
+
+  // If we are NOT keeping the seed, generate a new one and a new name
+  if (!keepSeed) {
+     currentSeed = Date.now();
+     dispatch(setSeed(currentSeed));
+     dispatch(setName(dockerNames.getRandomName()));
+  }
+
   dispatch(
     setPattern(
-      generate({ patternLength, density, spread, accentsDensity, slidesDensity }),
+      generate({ 
+          patternLength, 
+          density, 
+          spread, 
+          accentsDensity, 
+          slidesDensity,
+          seed: currentSeed
+      }),
     ),
   );
   return;

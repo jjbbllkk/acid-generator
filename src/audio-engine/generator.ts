@@ -39,35 +39,49 @@ const generate = ({
 }: GeneratorParams): SequenceStep[] => {
   const rng = sfc32(seed, seed, seed, seed);
 
-  // We generate elements for the full MAX_LEN (64)
-  const elements = Array(MAX_LEN)
+  // 1. Determine Scale Subset (Spread)
+  // We shuffle the full scale first so the RNG consumption is constant regardless of spread value
+  // We request scale.length items to get the full shuffled array
+  const shuffledScale = arrayRand(scale, scale.length, rng);
+
+  // Now we decide how many notes to use from that shuffled set.
+  // We map 0-100% to 1-7 notes (ensure at least 1 note is available)
+  const spreadCount = Math.max(1, Math.round(scale.length * (spread / 100)));
+  const selectedNotes = shuffledScale.slice(0, spreadCount);
+
+  // 2. Determine Step Activation Order (Density Structure)
+  // We generate a random priority order for all 64 steps.
+  // Steps appearing earlier in this list are "higher priority" and appear at lower density settings.
+  const allSteps = Array(MAX_LEN)
     .fill(0)
-    .map((_v, i) => i);
+    .map((_, i) => i);
+  const stepActivationOrder = arrayRand(allSteps, MAX_LEN, rng);
 
-  // Density is calculated against the full 64 steps
-  const seqDensity = Math.round(MAX_LEN * (density / 100));
-  
-  const notesToGenerate = randomInt(Math.round(seqDensity / 2), seqDensity, rng);
+  // 3. Generate content for ALL steps (pitch, octave, accent/slide potential)
+  // We generate properties for every single step (0 to 63) sequentially.
+  // This ensures that Step X always gets the same Note/Octave/Probabilities
+  // regardless of which other steps are active.
+  const stepData = allSteps.map(() => {
+    return {
+      noteIndex: randomInt(0, selectedNotes.length - 1, rng),
+      octave: randomInt(-1, 1, rng) as Octave,
+      accentProb: rng(),
+      slideProb: rng(),
+    };
+  });
 
-  const selectedSteps = arrayRand(elements, notesToGenerate, rng);
+  // 4. Filter Active Steps based on Density
+  // Map density 0-100 to 0-64 steps
+  const numStepsToGenerate = Math.round(MAX_LEN * (density / 100));
 
-  const accents = arrayRand(
-    selectedSteps,
-    randomInt(1, Math.round((notesToGenerate / 2) * (accentsDensity / 100)), rng),
-    rng
+  // Create a set of active indices for O(1) lookup
+  const activeStepsSet = new Set(
+    stepActivationOrder.slice(0, numStepsToGenerate),
   );
-  const slides = arrayRand(
-    selectedSteps,
-    randomInt(0, Math.round((notesToGenerate / 2) * (slidesDensity / 100)), rng),
-    rng
-  );
-  const randNotes = arrayRand(selectedSteps, randomInt(0, notesToGenerate, rng), rng);
 
-  const notesSpread = randomInt(0, Math.round((scale.length - 1) * (spread / 100)), rng);
-  const selectedNotes = arrayRand(scale, notesSpread, rng);
-
-  const out = elements.map((v) => {
-    if (!selectedSteps.includes(v) || selectedSteps.length === 0) {
+  // 5. Build the pattern
+  return allSteps.map((i) => {
+    if (!activeStepsSet.has(i)) {
       return {
         note: null,
         octave: null,
@@ -75,20 +89,16 @@ const generate = ({
         slide: null,
       } as SequenceStep<null>;
     }
-    const octave = randomInt(-1, 1, rng) as Octave;
-    const note =
-      randNotes.includes(v) && selectedNotes.length > 0
-        ? selectedNotes[randomInt(0, selectedNotes.length - 1, rng)]
-        : 0;
+
+    const data = stepData[i];
+
     return {
-      note,
-      octave,
-      accent: accents.includes(v),
-      slide: slides.includes(v),
+      note: selectedNotes[data.noteIndex],
+      octave: data.octave,
+      accent: data.accentProb < accentsDensity / 100,
+      slide: data.slideProb < slidesDensity / 100,
     } as SequenceStep<Unit.Note>;
   });
-
-  return out;
 };
 
 export { generate };

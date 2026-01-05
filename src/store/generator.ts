@@ -18,6 +18,7 @@ interface State {
   slidesDensity: number;
   startWithNote: boolean;
   startWithAccent: boolean;
+  seed: number;
 }
 
 interface Reducers extends SliceCaseReducers<State> {
@@ -27,6 +28,7 @@ interface Reducers extends SliceCaseReducers<State> {
   setSpread: CaseReducer<State, PayloadAction<number>>;
   setAccentDensity: CaseReducer<State, PayloadAction<number>>;
   setSlidesDensity: CaseReducer<State, PayloadAction<number>>;
+  setSeed: CaseReducer<State, PayloadAction<number>>;
 }
 
 const initialState: State = {
@@ -38,6 +40,7 @@ const initialState: State = {
   slidesDensity: 50,
   startWithAccent: false,
   startWithNote: false,
+  seed: Date.now(),
 };
 
 const slice = createSlice<State, Reducers>({
@@ -84,6 +87,12 @@ const slice = createSlice<State, Reducers>({
         slidesDensity: payload,
       };
     },
+    setSeed: (state, { payload }) => {
+      return {
+        ...state,
+        seed: payload,
+      };
+    },
   },
 });
 
@@ -95,6 +104,7 @@ const {
     setSpread,
     setAccentDensity,
     setSlidesDensity,
+    setSeed,
   },
   reducer,
 } = slice;
@@ -106,6 +116,7 @@ export {
   setSpread,
   setAccentDensity,
   setSlidesDensity,
+  setSeed,
 };
 export type { State as GeneratorState };
 export default reducer;

@@ -10,9 +10,10 @@ interface Props {
   pattern: SequenceStep[];
   currentStep: number;
   scaleName: SCALE;
+  patternLength: number;
 }
 
-const PianoRoll: FC<Props> = ({ pattern, currentStep, scaleName }) => {
+const PianoRoll: FC<Props> = ({ pattern, currentStep, scaleName, patternLength }) => {
   return (
     <ul className={styles.pattern}>
       <li className={styles.step}>
@@ -33,9 +34,12 @@ const PianoRoll: FC<Props> = ({ pattern, currentStep, scaleName }) => {
         </ul>
       </li>
       {pattern.map(({ note, octave, accent, slide }, i) => {
+        const isInactive = i >= patternLength;
         return (
           <li
-            className={`${styles.step} ${i === currentStep ? styles.active : ''}`}
+            className={`${styles.step} ${i === currentStep ? styles.active : ''} ${
+              isInactive ? styles.inactive : ''
+            }`}
             key={`pattern-step-${i}`}
           >
             <ul>

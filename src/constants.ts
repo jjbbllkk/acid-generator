@@ -15,6 +15,9 @@ export const DEFAULTS = {
   DELAY_LEVEL: -18,
   CUTOFF: 220,
   RESONANCE: 3,
+  // New Defaults
+  ENV_MOD: 3, 
+  DECAY: 0.5,
 };
 
 export const CUTOFF: Range = {
@@ -35,6 +38,18 @@ export const BPM: Range = {
 export const DELAY_SEND: Range = {
   MIN: -80,
   MAX: -1,
+};
+
+// Controls how many octaves the envelope pushes the filter freq
+export const ENV_MOD: Range = {
+  MIN: 0,
+  MAX: 10,
+};
+
+// Controls the decay time in seconds
+export const DECAY: Range = {
+  MIN: 0.1,
+  MAX: 2.0,
 };
 
 export const internalSynth: InternalSynth = 'internal';

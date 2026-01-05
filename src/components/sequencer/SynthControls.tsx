@@ -1,24 +1,32 @@
 import { type FC } from 'react';
 import Knob from '../Knob';
-import { CUTOFF, DEFAULTS, DELAY_SEND, RES } from '../../constants';
+import { CUTOFF, DEFAULTS, DELAY_SEND, RES, ENV_MOD, DECAY } from '../../constants';
 
 import styles from './SynthControls.module.less';
 
 interface Props {
   resonance: number;
   cutoff: number;
+  envelope: number; // New
+  decay: number;    // New
   delay: number;
   onCutoffChange: (v: number) => void;
   onResonanceChange: (v: number) => void;
+  onEnvelopeChange: (v: number) => void; // New
+  onDecayChange: (v: number) => void;    // New
   onDelaySendChange: (v: number) => void;
 }
 
 const SynthControls: FC<Props> = ({
   cutoff,
   resonance,
+  envelope,
+  decay,
   delay,
   onCutoffChange,
   onResonanceChange,
+  onEnvelopeChange,
+  onDecayChange,
   onDelaySendChange,
 }) => {
   return (
@@ -47,6 +55,32 @@ const SynthControls: FC<Props> = ({
           label={'RES'}
         />
       </li>
+      {/* New Envelope Mod Knob */}
+      <li>
+        <Knob
+          onChange={onEnvelopeChange}
+          min={ENV_MOD.MIN}
+          max={ENV_MOD.MAX}
+          defaultValue={DEFAULTS.ENV_MOD}
+          value={envelope}
+          direction={'vertical'}
+          step={0.1}
+          label={'ENV'}
+        />
+      </li>
+      {/* New Decay Knob */}
+      <li>
+        <Knob
+          onChange={onDecayChange}
+          min={DECAY.MIN}
+          max={DECAY.MAX}
+          defaultValue={DEFAULTS.DECAY}
+          value={decay}
+          direction={'vertical'}
+          step={0.1}
+          label={'DEC'}
+        />
+      </li>
       <li>
         <Knob
           onChange={onDelaySendChange}
@@ -56,7 +90,7 @@ const SynthControls: FC<Props> = ({
           value={delay}
           direction={'vertical'}
           step={0.1}
-          label={'DELAY SEND'}
+          label={'DLY'}
         />
       </li>
     </menu>

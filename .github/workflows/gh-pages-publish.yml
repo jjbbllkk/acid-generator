@@ -6,10 +6,10 @@ permissions:
 on:
   push:
     branches:
-      - master
+      - main
   release:
     branches:
-      - master
+      - main
 
 jobs:
   build:

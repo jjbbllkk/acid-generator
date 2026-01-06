@@ -41,8 +41,7 @@ const generate = ({
 
   // --- 1. MUSICAL SPREAD LOGIC ---
   const weightedScale = scale.map((noteIndex) => {
-    // FIX: Use the seeded rng() instead of Math.random()
-    let weight = rng(); 
+    let weight = rng(); // Use seeded rng
     if (noteIndex === 0) weight += 999; // Always keep Root first
     if (noteIndex === 4) weight += 0.5; // Often the 5th
 

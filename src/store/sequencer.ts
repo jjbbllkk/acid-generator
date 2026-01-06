@@ -59,6 +59,7 @@ interface Reducers extends SliceCaseReducers<State> {
   removeMidiOutput: CaseReducer<State, PayloadAction<SequencerOutput>>;
   selectOutput: CaseReducer<State, PayloadAction<string | undefined>>;
   setMidiChannel: CaseReducer<State, PayloadAction<{ id: string; channel: number }>>;
+  setBaseNote: CaseReducer<State, PayloadAction<number>>; // New Action
 }
 
 const slice = createSlice<State, Reducers>({
@@ -227,6 +228,15 @@ const slice = createSlice<State, Reducers>({
         },
       };
     },
+    setBaseNote: (state, { payload }) => {
+      return {
+        ...state,
+        options: {
+          ...state.options,
+          baseNote: payload,
+        },
+      };
+    },
   },
 });
 
@@ -245,6 +255,7 @@ const {
     selectOutput,
     setMidiChannel,
     removeMidiOutput,
+    setBaseNote, // Export new action
   },
   reducer,
 } = slice;
@@ -263,6 +274,7 @@ export {
   selectOutput,
   setMidiChannel,
   removeMidiOutput,
+  setBaseNote, // Export new action
 };
 export type { State as SequencerState };
 export default reducer;

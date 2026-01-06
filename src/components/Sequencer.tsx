@@ -16,17 +16,19 @@ const Sequencer: FC<Props> = ({
   onDownloadClick,
   pattern,
   currentStep,
-  patternLength, // New: Destructure patternLength
+  patternLength,
   resonance,
   cutoff,
   envelope,
   decay,
   delay,
+  transpose, // New
   onCutoffChange,
   onResonanceChange,
   onEnvelopeChange,
   onDecayChange,
   onDelaySendChange,
+  onTransposeChange, // New
   onPlayClick,
   onTempoChange,
   tempo,
@@ -56,7 +58,7 @@ const Sequencer: FC<Props> = ({
             pattern={pattern}
             currentStep={currentStep}
             scaleName={scaleName}
-            patternLength={patternLength} // New: Pass it to PianoRoll
+            patternLength={patternLength}
           />
         </div>
       </main>
@@ -73,11 +75,13 @@ const Sequencer: FC<Props> = ({
           envelope={envelope}
           decay={decay}
           delay={delay}
+          transpose={transpose} // Pass
           onCutoffChange={onCutoffChange}
           onResonanceChange={onResonanceChange}
           onEnvelopeChange={onEnvelopeChange}
           onDecayChange={onDecayChange}
           onDelaySendChange={onDelaySendChange}
+          onTransposeChange={onTransposeChange} // Pass
           onPlayClick={onPlayClick}
           onTempoChange={onTempoChange}
           tempo={tempo}

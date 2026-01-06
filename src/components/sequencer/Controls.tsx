@@ -15,8 +15,10 @@ const Controls: FC<Props & { output: SequencerOutput | undefined }> = ({
   decay,
   delay,
   tempo,
+  transpose, // New
   onPlayClick,
   onTempoChange,
+  onTransposeChange, // New
   playing,
   onCutoffChange,
   onResonanceChange,
@@ -32,6 +34,8 @@ const Controls: FC<Props & { output: SequencerOutput | undefined }> = ({
         onPlayClick={onPlayClick}
         tempo={tempo}
         onTempoChange={onTempoChange}
+        onTransposeChange={onTransposeChange} // Pass
+        transpose={transpose} // Pass
         playing={playing}
       />
       <aside>

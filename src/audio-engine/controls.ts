@@ -106,18 +106,32 @@ const playNote = ({
   len,
   resonance,
   slide,
+  slideFromPrev,
 }: {
   output: SequencerOutput | undefined;
   noteNumber: number;
   accent: boolean | null;
   slide: boolean | null;
+  slideFromPrev: boolean;
   time: number;
   len: number;
   resonance: number;
 }) => {
   if (!output) {
     tb303.filter.set({ Q: accent ? resonance + 2 : resonance });
-    tb303.triggerAttack(Frequency(noteNumber, 'midi').toNote(), time, accent ? 1 : 0.5);
+
+    if (slideFromPrev) {
+      // 303 Style Slide: Change pitch WITHOUT re-triggering the envelope
+      tb303.setNote(Frequency(noteNumber, 'midi').toNote(), time);
+    } else {
+      // Normal attack
+      tb303.triggerAttack(
+        Frequency(noteNumber, 'midi').toNote(),
+        time,
+        accent ? 1 : 0.5,
+      );
+    }
+
     if (!slide) {
       tb303.triggerRelease(time + len);
     }
@@ -151,6 +165,7 @@ const playSequenceStep = (time: number) => {
 
   const output = getOutput(outputs);
 
+  // Determine active loop length
   const seqLength = patternLength;
 
   const currentStep = getNextStep(oldStep, seqLength);
@@ -162,13 +177,31 @@ const playSequenceStep = (time: number) => {
   if (currentStep < pattern.length) {
     const { note, accent, slide, octave } = pattern[currentStep];
 
+    // Determine if we are sliding FROM the previous note
+    // 1. Find previous index (wrapping around the loop length)
+    const prevStepIndex = (currentStep - 1 + seqLength) % seqLength;
+    const prevStep = pattern[prevStepIndex];
+    // 2. Check if previous step existed, had a note, and had slide=true
+    const slideFromPrev =
+      !!prevStep && prevStep.note !== null && (prevStep.slide ?? false);
+
     if (note !== null && octave !== null) {
       const len = Time('16n').toSeconds() * (slide ? 1.25 : 0.4);
       const noteNumber = Frequency(
         getNoteInScale(note, scale, baseNote, octave),
         'midi',
       ).toMidi();
-      playNote({ noteNumber, output, accent, slide, time, len, resonance });
+      
+      playNote({
+        noteNumber,
+        output,
+        accent,
+        slide,
+        slideFromPrev,
+        time,
+        len,
+        resonance,
+      });
     }
   }
 
@@ -192,9 +225,8 @@ const changeDelaySend = (v: number) => {
   dispatch(setDelaySend(v));
 };
 
-// NEW: Control handlers
 const changeEnvelope = (v: number) => {
-  // @ts-ignore: Tone.js types are sometimes loose
+  // @ts-ignore: Tone.js types
   tb303.filterEnvelope.set({ octaves: v });
   dispatch(setEnvelope(v));
 };
@@ -261,8 +293,8 @@ export {
   changeCutoff,
   changeResonance,
   changeDelaySend,
-  changeEnvelope, // Exported
-  changeDecay,    // Exported
+  changeEnvelope,
+  changeDecay,
   downloadPattern,
   generatePattern,
   stopInternalSynth,

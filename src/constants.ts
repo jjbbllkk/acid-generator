@@ -6,7 +6,7 @@ type Range = {
   MAX: number;
 };
 
-export const BASE_NOTE = 48;
+export const BASE_NOTE = 48; // C3
 
 export const DEFAULTS = {
   BPM: 120,
@@ -15,9 +15,9 @@ export const DEFAULTS = {
   DELAY_LEVEL: -18,
   CUTOFF: 220,
   RESONANCE: 3,
-  // New Defaults
-  ENV_MOD: 3, 
+  ENV_MOD: 3,
   DECAY: 0.5,
+  TRANSPOSE: 0, // Default 0 offset
 };
 
 export const CUTOFF: Range = {
@@ -40,16 +40,19 @@ export const DELAY_SEND: Range = {
   MAX: -1,
 };
 
-// Controls how many octaves the envelope pushes the filter freq
 export const ENV_MOD: Range = {
   MIN: 0,
   MAX: 10,
 };
 
-// Controls the decay time in seconds
 export const DECAY: Range = {
   MIN: 0.1,
   MAX: 2.0,
+};
+
+export const TRANSPOSE: Range = {
+  MIN: -12,
+  MAX: 12,
 };
 
 export const internalSynth: InternalSynth = 'internal';

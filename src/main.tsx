@@ -5,6 +5,9 @@ import { Provider } from 'react-redux';
 import App from './App';
 import './index.less';
 import { store } from './store.ts';
+import runVectors from './createTestVectors';
+
+runVectors();
 
 import.meta.env.DEV
   ? null

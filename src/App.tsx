@@ -13,6 +13,7 @@ import {
   toggleTransport,
 } from './audio-engine/controls';
 import { type SCALE } from './audio-engine/scales';
+import { BASE_NOTE } from './constants'; // Import BASE_NOTE
 import GeneratorControls from './components/GeneratorControls';
 import Sequencer from './components/Sequencer';
 import About from './components/About';
@@ -32,6 +33,7 @@ import {
   setScale,
   shiftPattern,
   storePattern,
+  setBaseNote, // Import new action
 } from './store/sequencer';
 import { type State } from './store';
 import { DIRECTION } from './types';
@@ -57,6 +59,7 @@ const App: FC = () => {
       storedPatterns,
       options: {
         output: { outputs, midi },
+        baseNote, // Destructure baseNote
       },
     },
     generator: {
@@ -135,6 +138,13 @@ const App: FC = () => {
   }, []);
 
   const handleTempoChange = useCallback((bpm: number) => changeTempo(bpm), []);
+
+  const handleTransposeChange = useCallback(
+    (val: number) => {
+      dispatch(setBaseNote(BASE_NOTE + val));
+    },
+    [dispatch],
+  );
 
   const handleShiftLeftClick = useCallback(() => {
     dispatch(shiftPattern(DIRECTION.LEFT));
@@ -218,11 +228,13 @@ const App: FC = () => {
           envelope={envelope}
           decay={decay}
           delay={delaySend}
+          transpose={baseNote - BASE_NOTE} // Calculate offset for knob
           onCutoffChange={changeCutoff}
           onResonanceChange={changeResonance}
           onEnvelopeChange={changeEnvelope}
           onDecayChange={changeDecay}
           onDelaySendChange={changeDelaySend}
+          onTransposeChange={handleTransposeChange}
           onPlayClick={togglePlay}
           onTempoChange={handleTempoChange}
           tempo={tempo}

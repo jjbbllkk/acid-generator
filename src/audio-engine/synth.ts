@@ -19,7 +19,7 @@ const tb303 = new MonoSynth({
     attackCurve: 'exponential',
     releaseCurve: 'exponential',
     attack: 0.01,
-    decay: decay, // Use decay from store
+    decay: decay,
     sustain: 0.1,
     release: 0.2,
   },
@@ -27,11 +27,11 @@ const tb303 = new MonoSynth({
     attackCurve: 'exponential',
     releaseCurve: 'exponential',
     attack: 0.01,
-    decay: decay, // Use decay from store
+    decay: decay,
     sustain: 0.1,
     release: 1,
     baseFrequency: cutoff,
-    octaves: envelope, // Use envelope (mod) from store
+    octaves: envelope,
     exponent: 5,
   },
   filter: {
@@ -40,7 +40,7 @@ const tb303 = new MonoSynth({
     Q: resonance,
     type: 'lowpass',
   },
-  portamento: 0.02,
+  portamento: 0.05, // Increased from 0.02 to 0.05 for more "drag"
 })
   .connect(split)
   .toDestination();
